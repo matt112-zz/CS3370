@@ -23,7 +23,7 @@ int get_number();
 
 int main()
 {
-	Deque test; // A AVL that we'll perform tests on
+	Deque<int> test; // A AVL that we'll perform tests on
 	char choice;   // A command character entered by the user
 
 	cout << "I have initialized an empty Deque" << endl;
