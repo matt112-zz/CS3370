@@ -147,11 +147,9 @@ void Deque<T>::resize(){
 	_front = _back = _capacity / 2;
 	cout << "new middle is " << _front << endl;
 	for(int i = oldmiddle; i >= oldfront; --i) {
-		//cout << temp[i] << endl;
 		push_front(temp[i]);
 	}
 	for(int i = oldmiddle+1; i < oldback; ++i) {
-		//cout << temp[i] << endl;
 		push_back(temp[i]);
 	}
 
