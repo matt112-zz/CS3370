@@ -8,7 +8,7 @@
 #ifndef DEQUE_H_
 #define DEQUE_H_
 
-#include <exception>
+#include <stdexcept>
 #include <iostream>
 
 using namespace std;
@@ -19,11 +19,11 @@ class Deque {
 	Deque(const Deque&) = delete;
 	Deque& operator=(const Deque&) = delete;
 	int _capacity;
-	int _size;
+	T _data;
 	const int CHUNK = 10;
 	int _front;
 	int _back;
-	int *arr;
+	T *arr;
 public:
 	Deque();
 	~Deque();
@@ -31,24 +31,27 @@ public:
 	void push_back(T); // Adds new element to the (right) end
 	T& front(); // Throws (a logic_error) if deque is empty
 	T& back(); // Throws if deque is empty
-	T& at(T pos); // Throws if pos is out of the range [0,d.size()-1]
+	T& at(size_t pos); // Throws if pos is out of the range [0,d.size()-1]
 	void pop_front(); // Removes first logical deque element
 	void pop_back(); // Removes last logical deque element
-	int size(); // NOTE: size_t is defined in <cstddef>
-				   //  int* begin(); // Returns a pointer to the first element
+	size_t size() const; // NOTE: size_t is defined in <cstddef>
+	bool empty();
+	size_t capacity() const;
+	   //  int* begin(); // Returns a pointer to the first element
 				   //  int* end(); // Returns a pointer to one position past the last element
+	T* begin();
+	T* end();
+
 	void print();
 	void resize();
-	bool empty();
-	int capacity();
 };
 
 template<typename T>
 Deque<T>::Deque() {
 	_capacity = CHUNK;
 	_front = _back = _capacity / 2;
-	arr = new int[_capacity];
-	_size = 0;
+	cout << "middle is " << _front << endl;
+	arr = new T[_capacity];
 }
 
 template<typename T>
@@ -88,28 +91,25 @@ T& Deque<T>::back() {
 }
  // Throws if deque is empty
 template<typename T>
-T& Deque<T>::at(T pos) {
-	return arr[pos];
+T& Deque<T>::at(size_t pos) {
+	//if(_front + pos < _front || _back + pos >= _back) throw logic_error("Out of range");
+	if(empty()) throw logic_error("Arrary is empty");
+	cout << "Calling at " << arr[_front + pos] << endl;
+	return arr[_front + pos];
 }
  // Throws if pos is out of the range [0,d.capacity()-1]
 template<typename T>
 void Deque<T>::pop_front() {
-	if(_front == _back) throw logic_error("Array is empty");
-
-	arr[_front] = 0;
-	_front++;
+	if(size()) _front++;
 }
  // Removes first logical deque element
 template<typename T>
 void Deque<T>::pop_back() {
-	if(empty()) throw logic_error("Array is empty");
-
-	_back--;
-	arr[_back] = 0;
+	if(size()) _back--;
 }
  // Removes last logical deque element
 template<typename T>
-int Deque<T>::size() {
+size_t Deque<T>::size() const{
 	return _back - _front;
 }
  // NOTE: size_t is defined in <cstddef>
@@ -123,26 +123,35 @@ void Deque<T>::print() {
 }
 
 template<typename T>
-int Deque<T>::capacity() {
+size_t Deque<T>::capacity() const{
 	return _capacity;
 }
 
 template<typename T>
 void Deque<T>::resize(){
-	int *temp = arr;
+	T *temp = arr;
 	_capacity = _capacity + CHUNK;
-	arr = new int[_capacity];
+	arr = new T[_capacity];
 	int oldback = _back;
 	int oldfront = _front;
-	int oldmiddle = oldfront + ((oldback - oldfront) / 2);
+	cout << "old back is " << _back << endl;
+	cout << "old front is " << _front << endl;
+	int oldmiddle = (oldfront + ((oldback - oldfront) / 2)) - 1;
+	cout << "Old middle is " << oldmiddle << endl;
+
+	for(int i = _front; i < _back; ++i) {
+		cout << temp[i] << " ";
+	}
+	cout << endl;
 
 	_front = _back = _capacity / 2;
+	cout << "new middle is " << _front << endl;
 	for(int i = oldmiddle; i >= oldfront; --i) {
-		cout << temp[i] << endl;
+		//cout << temp[i] << endl;
 		push_front(temp[i]);
 	}
 	for(int i = oldmiddle+1; i < oldback; ++i) {
-		cout << temp[i] << endl;
+		//cout << temp[i] << endl;
 		push_back(temp[i]);
 	}
 
@@ -154,7 +163,15 @@ bool Deque<T>::empty() {
 	return size() == 0;
 }
 
+template<typename T>
+T* Deque<T>::begin() {
+	return arr + _front;
+}
 
+template<typename T>
+T* Deque<T>::end() {
+	return arr + _back;
+}
 
 
 
