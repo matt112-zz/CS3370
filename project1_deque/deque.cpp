@@ -1,11 +1,3 @@
-/*
- * deque.cpp
- *
- *  Created on: Jan 8, 2016
- *      Author: matt
- */
-
-
 // deque.cpp: Test for Program 1
 #include "deque.h"
 #include <cassert>
@@ -35,8 +27,6 @@ int main() {
         d.pop_back();
         d.pop_front();
     }
-
-    d.print();
 
     assert(d.size() == 11);
     assert(equal(d.begin(), d.end(), nums+6));
